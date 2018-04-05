@@ -1,4 +1,6 @@
 {
     "auth": {
-    }
+    },
+    "submit": true,
+    "preamble": "Circles marked with 💀 indicate that they have been betrayed."
 }
