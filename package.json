@@ -1,3 +1,8 @@
 {
-    "name": "circle-tracking"
+    "name": "circle-tracking",
+    "dependencies": {
+        "circle-of-trust": "^1.2.0",
+        "markdown-table": "^1.1.1",
+        "snoowrap": "^1.15.2"
+    }
 }
