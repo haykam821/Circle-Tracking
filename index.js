@@ -42,7 +42,7 @@ function section(title, description, data) {
     ].join("\n\n");
 
     ct.submitSelfpost({
-        title: `Circle Statisics - ${moment().format("l [at] LT")}`,
+        title: `Circle Statistics - ${moment().format("l [at] LT")}`,
         text: sections,
     });
 })();
