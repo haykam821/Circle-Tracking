@@ -43,7 +43,7 @@ function transpose(a) {
 }
 
 function within(circle, time) {
-    return moment.unix(circle.timestamp).diff(moment(), "seconds") > time;
+    return moment(circle.timestamp).diff(moment(), "seconds") > time;
 }
 function fwithin(array, time) {
     return array.filter(circle => {
