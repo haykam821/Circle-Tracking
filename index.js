@@ -13,7 +13,6 @@ const reddit = new snoowrap({
 
 const ct = reddit.getSubreddit(config.outputSubreddit);
 const cot = reddit.getSubreddit("CircleofTrust");
-cot.fetch();
 
 const moment = require("moment");
 
@@ -80,6 +79,8 @@ function dataify(value, filter) {
 }
 
 (async function() {
+    await cot.fetch();
+
     const topFew = await cot.getTop({
         time: "all",
     });
