@@ -51,8 +51,8 @@ function within(circle, time) {
     const circleCreation = moment(circle.creation_date);
     const now = moment();
 
-    const diff = now.diff(circleCreation, "seconds");
-    return diff > time;
+    const diff = now.diff(circleCreation, "hours");
+    return diff < time;
 }
 function fwithin(array, time) {
     return array.filter(circle => {
@@ -64,7 +64,13 @@ function fwithin(array, time) {
 }
 function filterify(value, filter = function(){return true}) {
     const topCircles = value.filter(filter).splice(0, 20);
-    return [topCircles, fwithin(topCircles, 3600 * 72), fwithin(topCircles, 3600 * 48), fwithin(topCircles, 3600 * 24), fwithin(topCircles, 3600 * 12)];
+    return [
+        fwithin(topCircles, Infinity), // A very large number is overall, I guess.
+        fwithin(topCircles, 72),
+        fwithin(topCircles, 48), 
+        fwithin(topCircles, 24),
+        fwithin(topCircles, 12),
+    ];
 }
 function dataify(value, filter) {
     return transpose(filterify(value, filter));
