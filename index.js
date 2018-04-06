@@ -12,8 +12,6 @@ const reddit = new snoowrap({
 });
 
 const ct = reddit.getSubreddit(config.outputSubreddit);
-ct.fetch();
-
 const cot = reddit.getSubreddit("CircleofTrust");
 cot.fetch();
 
