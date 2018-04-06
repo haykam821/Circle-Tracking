@@ -86,7 +86,7 @@ function dataify(value, filter) {
         time: "all",
     });
     const top = await topFew.fetchMore({
-        amount: 750,
+        amount: 500,
     });
     const topCircles = await Promise.all(top.filter(value => {
         return value.selftext === ""; // mods' text posts should be ignored
