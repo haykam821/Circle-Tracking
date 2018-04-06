@@ -16,26 +16,31 @@ const moment = require("moment");
 
 const table = require("markdown-table");
 function section(title, description, data) {
-    const header = `# ${title}`;
     const intervals = [
+        "#",
         "Overall",
+        "72 hours",
+        "48 hours",
         "24 hours",
-        "12 hours",
-        "6 hours",
-        "3 hours",
+        "12 hours"
     ];
 
-    const circles = new Array(data.length).fill([]);
-    data.forEach(row => {
-        row.forEach((value, index) => {
-            circles[index].push(`[${value.name}](${value.post_link})${value.betrayed ? " 💀" : ""}`);
-        })
+    const circles = data.map((row, index) => {
+        const output = row.map(value => {
+            return value ? `[${value.name}](${value.link}) (+${value.members}) ${value.betrayed ? " 💀" : ""}` : "";
+        });
+        output.unshift(index + 1);
+
+        return output;
     });
     circles.unshift(intervals);
 
     const output = [];
-    output.push(header, description, table(circles));
-    return output.join("\n\n");
+    output.push(config.preamble, description, table(circles));
+    return {
+        header: title,
+        text: output.join("\n\n"),
+    };
 }
 
 function transpose(a) {
@@ -43,42 +48,54 @@ function transpose(a) {
 }
 
 function within(circle, time) {
-    return moment(circle.timestamp).diff(moment(), "seconds") > time;
+    const circleCreation = moment(circle.creation_date);
+    const now = moment();
+
+    const diff = now.diff(circleCreation, "seconds");
+    return diff > time;
 }
 function fwithin(array, time) {
     return array.filter(circle => {
         return within(circle, time);
+    }).sort((item, item2) => {
+        const memberReturn = item.members > item2.members ? -1 : 1;
+        return memberReturn;
     });
+}
+function filterify(value, filter = function(){return true}) {
+    const topCircles = value.filter(filter).splice(0, 20);
+    return [topCircles, fwithin(topCircles, 3600 * 72), fwithin(topCircles, 3600 * 48), fwithin(topCircles, 3600 * 24), fwithin(topCircles, 3600 * 12)];
+}
+function dataify(value, filter) {
+    return transpose(filterify(value, filter));
 }
 
 (async function() {
-    //const circled = await circler("haykam821");
-    const topUnbetrayed = await cot.getTop({
+    const topFew = await cot.getTop({
         time: "all",
     });
-    const topCircles = await Promise.all(topUnbetrayed.filter(value => {
+    const top = await topFew.fetchMore({
+        amount: 250,
+    });
+    const topCircles = await Promise.all(top.filter(value => {
         return value.selftext === ""; // mods' text posts should be ignored
     }).map(async value => {
-        const circling = circler(value.author.name);
-        circling.post_link = value.url;
+        const circling = await circler(value.author.name);
         return circling;
     }));
-    
-    const data = [
-        topCircles, fwithin(topCircles, 3600 * 24), fwithin(topCircles, 3600 * 12), fwithin(topCircles, 3600 * 6), fwithin(topCircles, 3600 * 3),
-    ];
-    console.log(data)
     const sections = [
-        config.preamble,
-        section("Largest Unbetrayed", "These are the circles that are still going strong and have the largest joiners without getting betrayed.", transpose(data)),
-    ].join("\n\n");
+        section("Largest Circles", "These are the largest circles, based on how many members have joined before betrayal (if it has happened yet).", dataify(topCircles)),
+        section("Largest Circles (without Betrayal)", "These are the circles that are still going strong and have the largest joiners without getting betrayed.", dataify(topCircles, v => !v.betrayed)),
+    ];
 
     if (config.submit) {
-        ct.submitSelfpost({
-            title: `Circle Statistics - ${moment().format("l [at] LT")}`,
-            text: sections,
+        sections.forEach(value => {
+            ct.submitSelfpost({
+                title: `${value.header} - ${moment().format("l [at] LT")}`,
+                text: value.text,
+            });
         });
     } else {
-        process.stdout.write(sections + "\n\n");
+        //process.stdout.write(config.preamble + "\n\n" + sections + "\n\n");
     }
 })();
