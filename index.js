@@ -1,8 +1,15 @@
 const config = require("./config.json");
+const version = require("./package.json").version;
 
 const snoowrap = require("snoowrap");
 const circler = require("circle-of-trust");
-const reddit = new snoowrap(config.auth);
+const reddit = new snoowrap({
+    password: config.auth.password,
+    username: config.auth.username,
+    clientId: config.auth.clientId,
+    clientSecret: config.auth.clientSecret,
+    userAgent: `r/circletracking for info | v${version}`,
+});
 
 const amap = require("async").map;
 
