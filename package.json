@@ -1,10 +1,35 @@
 {
-    "name": "circle-tracking",
-    "dependencies": {
-        "circle-of-trust": "^1.3.0",
-        "markdown-table": "^1.1.1",
-        "moment": "^2.22.0",
-        "snoowrap": "^1.15.2"
-    },
-    "license": "MIT"
+  "name": "circle-tracking",
+  "dependencies": {
+    "circle-of-trust": "^1.3.0",
+    "markdown-table": "^1.1.1",
+    "moment": "^2.22.0",
+    "snoowrap": "^1.15.2"
+  },
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "A tool for generating Markdown tracking of the Circle of Trust experiment.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haykam821/Circle-Tracking.git"
+  },
+  "keywords": [
+    "tracker",
+    "markdown",
+    "circle",
+    "trust",
+    "subreddit",
+    "reddit",
+    "data"
+  ],
+  "author": "haykam821",
+  "bugs": {
+    "url": "https://github.com/haykam821/Circle-Tracking/issues"
+  },
+  "homepage": "https://github.com/haykam821/Circle-Tracking#readme"
 }
