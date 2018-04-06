@@ -11,8 +11,6 @@ const reddit = new snoowrap({
     userAgent: `r/${config.outputSubreddit} for info | v${version}`,
 });
 
-const amap = require("async").map;
-
 const ct = reddit.getSubreddit(config.outputSubreddit);
 ct.fetch();
 
