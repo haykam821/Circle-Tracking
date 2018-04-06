@@ -8,12 +8,12 @@ const reddit = new snoowrap({
     username: config.auth.username,
     clientId: config.auth.clientId,
     clientSecret: config.auth.clientSecret,
-    userAgent: `r/circletracking for info | v${version}`,
+    userAgent: `r/${config.outputSubreddit} for info | v${version}`,
 });
 
 const amap = require("async").map;
 
-const ct = reddit.getSubreddit("circletracking");
+const ct = reddit.getSubreddit(config.outputSubreddit);
 ct.fetch();
 
 const cot = reddit.getSubreddit("CircleofTrust");
