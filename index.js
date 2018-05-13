@@ -85,7 +85,7 @@ function dataify(value, filter) {
 		time: "all",
 	});
 	const top = await topFew.fetchMore({
-		amount: 500,
+		amount: 250,
 	});
 	const topCircles = await Promise.all(top.filter(value => {
 		return value.selftext === "";
